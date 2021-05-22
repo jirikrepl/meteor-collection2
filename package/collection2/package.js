@@ -28,7 +28,8 @@ Package.onUse(function(api) {
   // Allow us to detect 'insecure'.
   api.use('insecure@1.0.7', {weak: true});
 
-  api.mainModule('collection2.js');
+  api.mainModule('collection2.js', 'client', { lazy: true });
+  api.mainModule('collection2.js', 'server');
 
-  api.export('Collection2');
+  // api.export('Collection2');
 });
