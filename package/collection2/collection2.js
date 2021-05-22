@@ -1,14 +1,15 @@
 import { EventEmitter } from 'meteor/raix:eventemitter';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { checkNpmVersions } from 'meteor/tmeasday:check-npm-versions';
+// import { checkNpmVersions } from 'meteor/tmeasday:check-npm-versions';
 import { EJSON } from 'meteor/ejson';
-import isEmpty from 'lodash.isempty';
-import isEqual from 'lodash.isequal';
-import isObject from 'lodash.isobject';
+// import isEmpty from 'lodash.isempty';
+// import isEqual from 'lodash.isequal';
+// import isObject from 'lodash.isobject';
+import { _ } from 'meteor/underscore';
 import { flattenSelector } from './lib';
 
-checkNpmVersions({ 'simpl-schema': '>=0.0.0' }, 'aldeed:collection2');
+// checkNpmVersions({ 'simpl-schema': '>=0.0.0' }, 'aldeed:collection2');
 
 const SimpleSchema = require('simpl-schema').default;
 
@@ -67,7 +68,7 @@ Mongo.Collection.prototype.attachSchema = function c2AttachSchema(ss, options) {
       // Loop through existing schemas with selectors,
       for (schemaIndex = obj._c2._simpleSchemas.length - 1; 0 < schemaIndex; schemaIndex--) {
         const schema = obj._c2._simpleSchemas[schemaIndex];
-        if (schema && isEqual(schema.selector, options.selector)) break;
+        if (schema && _.isEqual(schema.selector, options.selector)) break;
       }
 
       if (schemaIndex <= 0) {
@@ -251,7 +252,7 @@ function doValidate(collection, type, args, getAutoValues, userId, isFromTrusted
     throw new Error("invalid type argument");
   }
 
-  const validatedObjectWasInitiallyEmpty = isEmpty(doc);
+  const validatedObjectWasInitiallyEmpty = _.isEmpty(doc);
 
   // Support missing options arg
   if (!callback && typeof options === "function") {
@@ -400,7 +401,7 @@ function doValidate(collection, type, args, getAutoValues, userId, isFromTrusted
   // don't make it into the upserted document and break validation.
   // This is no doubt prone to errors, but there probably isn't any better way
   // right now.
-  if (Meteor.isServer && isUpsert && isObject(selector)) {
+  if (Meteor.isServer && isUpsert && _.isObject(selector)) {
     const set = docToValidate.$set || {};
     docToValidate.$set = flattenSelector(selector);
 
@@ -426,7 +427,7 @@ function doValidate(collection, type, args, getAutoValues, userId, isFromTrusted
   }
 
   // XXX Maybe move this into SimpleSchema
-  if (!validatedObjectWasInitiallyEmpty && isEmpty(docToValidate)) {
+  if (!validatedObjectWasInitiallyEmpty && _.isEmpty(docToValidate)) {
     throw new Error('After filtering out keys not in the schema, your ' +
       (type === 'update' ? 'modifier' : 'object') +
       ' is now empty');
