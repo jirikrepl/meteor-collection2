@@ -5,7 +5,8 @@
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/Meteor-Community-Packages/meteor-collection2.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Meteor-Community-Packages/meteor-collection2/context:javascript)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Meteor-Community-Packages/meteor-collection2?label=latest&sort=semver)
 [![](https://img.shields.io/badge/semver-2.0.0-success)](http://semver.org/spec/v2.0.0.html) 
-[![CircleCI](https://circleci.com/gh/Meteor-Community-Packages/meteor-collection2/tree/master.svg?style=svg)](https://circleci.com/gh/Meteor-Community-Packages/meteor-collection2/tree/master)
+![Test suite](https://github.com/Meteor-Community-Packages/meteor-collection2/workflows/Test%20suite/badge.svg)
+
 
 A Meteor package that allows you to attach a schema to a Mongo.Collection. Automatically validates against that schema when inserting and updating from client or server code.
 
@@ -16,7 +17,6 @@ This package requires the [simpl-schema](https://github.com/aldeed/simple-schema
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Installation](#installation)
 - [Why Use Collection2](#why-use-collection2)
 - [Attaching a Schema to a Collection](#attaching-a-schema-to-a-collection)
@@ -26,6 +26,7 @@ This package requires the [simpl-schema](https://github.com/aldeed/simple-schema
     - [replace](#replace)
   - [Attach a Schema to Meteor.users](#attach-a-schema-to-meteorusers)
 - [Schema Format](#schema-format)
+- [Schema Clean Options](#schema-clean-options)
 - [Passing Options](#passing-options)
 - [Validation Contexts](#validation-contexts)
 - [Validating Without Inserting or Updating](#validating-without-inserting-or-updating)
@@ -48,10 +49,7 @@ This package requires the [simpl-schema](https://github.com/aldeed/simple-schema
   - [Automatic Migrations](#automatic-migrations)
 - [Problems](#problems)
   - [SubObjects and Arrays of Objects](#subobjects-and-arrays-of-objects)
-- [Contributing](#contributing)
-  - [Running Tests](#running-tests)
-  - [Running Tests in Watch Mode](#running-tests-in-watch-mode)
-- [Publishing a New Release to Atmosphere](#publishing-a-new-release-to-atmosphere)
+- [Disable displaying collection name in error message](#disable-displaying-collection-name-in-error-message)
 - [Contributors](#contributors)
   - [Major Code Contributors](#major-code-contributors)
 
@@ -363,6 +361,26 @@ instance for a Mongo.Collection instance. For example:
 MyCollection.simpleSchema().validate(doc);
 ```
 
+## Schema Clean Options
+
+You can set the simpl-schema clean options globally in collection2. They are merged with any options defined on the schema level.
+
+```js
+import Collection2 from 'meteor/aldeed:collection2'
+
+// The values shown are the default options used internally. Overwrite them if needed.
+Collection2.cleanOptions = {
+    filter: true,
+    autoConvert: true,
+    removeEmptyStrings: true,
+    trimStrings: true,
+    removeNullsFromArrays: true,
+}
+
+// Or you can update individual options.
+Collection2.cleanOptions.filter = false;
+```
+
 ## Passing Options
 
 In Meteor, the `update` function accepts an options argument. Collection2 changes the `insert` function signature to also accept options in the same way, as an optional second argument. Whenever this documentation says to "use X option", it's referring to this options argument. For example:
@@ -497,7 +515,7 @@ Even if you skip all validation and cleaning, Collection2 will still do some obj
 ## Additional SimpleSchema Options
 
 In addition to all the other schema validation options documented in the
-[simpl-schema](https://github.com/aldeed/simple-schema-js) package, the
+[simpl-schema](https://github.com/longshotlabs/simpl-schema) package, the
 collection2 package adds additional options explained in this section.
 
 ### index and unique
