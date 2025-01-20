@@ -15,7 +15,7 @@ Package.describe({
 // });
 
 Package.onUse(function(api) {
-  api.versionsFrom(['1.12.1', '2.3']);
+  api.versionsFrom('METEOR@3.0.4');
   api.use('mongo');
   api.imply('mongo');
   api.use('minimongo');
